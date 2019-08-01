@@ -16,14 +16,14 @@ module Nutmeg
       def add
         they_have_no_stripe_customer_data? ? create_stripe_customer_and_card : update_stripe_customer
 
-        user.update_attributes!(user_params(for: :add))
+        user.update!(user_params(for: :add))
         Nutmeg::Stripe::Response.new
       end
 
       def remove
         customer.sources.retrieve(customer.default_source).delete
 
-        user.update_attributes!(user_params(for: :remove))
+        user.update!(user_params(for: :remove))
         Nutmeg::Stripe::Response.new
       end
 

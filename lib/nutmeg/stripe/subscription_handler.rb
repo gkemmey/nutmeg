@@ -33,14 +33,14 @@ module Nutmeg
           end
         end
 
-        user.update_attributes!(user_params(for: :start))
+        user.update!(user_params(for: :start))
 
         Nutmeg::Stripe::Response.new
       end
 
       def cancel
         ::Stripe::Subscription.update(user.stripe_subscription.id, cancel_at_period_end: true)
-        user.update_attributes!(user_params(for: :cancel))
+        user.update!(user_params(for: :cancel))
 
         Nutmeg::Stripe::Response.new
       end

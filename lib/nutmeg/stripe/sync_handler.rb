@@ -58,7 +58,7 @@ module Nutmeg
                         card_expires_at: nil)
         end
 
-        user.update_attributes!(params)
+        user.update!(params)
       end
 
       private

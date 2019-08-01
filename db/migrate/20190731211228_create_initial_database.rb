@@ -4,7 +4,8 @@ class CreateInitialDatabase < ActiveRecord::Migration[6.0]
       t.string     :session_user_id
 
       t.integer    :billing_status,        null: false, default: 0 # 0 = trialing, 1 = active, 2 = active_until_period_end, 3 = cancelled, 4 = past_due
-      t.datetime   :trial_over_at,         null: false, default: -> { "(datetime('now', '+14 days'))" }
+      t.datetime   :trial_over_at,         null: false,
+                                           default: -> { "(datetime('now', '+14 days'))" }
       t.string     :billing_email
       t.string     :stripe_customer_id
       t.string     :card_last_four

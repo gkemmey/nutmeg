@@ -42,3 +42,13 @@
     }
   }
 }
+
+.StripeElement {
+  &.StripeElement--focus {
+    @extend .input, :focus;
+  }
+
+  &.StripeElement--invalid {
+    @extend .input, .is-danger;
+  }
+}

@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'dotenv-rails'
+gem 'exception_notification'
 gem 'stripe', '~> 4.16.0'
 
 group :development, :test do
@@ -54,6 +55,8 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+
+  gem 'stripe-ruby-mock', '~> 2.5.8', require: 'stripe_mock'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

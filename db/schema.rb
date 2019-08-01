@@ -24,7 +24,8 @@ ActiveRecord::Schema.define(version: 2019_07_31_211228) do
   create_table "users", force: :cascade do |t|
     t.string "session_user_id"
     t.integer "billing_status", default: 0, null: false
-    t.datetime "trial_over_at", null: false
+    # ⚠️YOU NEED TO PUT THE DEFAULT BACK MANUALLY IN THE SCHEMA FILE ⚠️
+    t.datetime "trial_over_at", default: -> { "(datetime('now', '+14 days'))" }, null: false
     t.string "billing_email"
     t.string "stripe_customer_id"
     t.string "card_last_four"
