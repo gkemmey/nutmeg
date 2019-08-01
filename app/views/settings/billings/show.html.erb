@@ -1,0 +1,160 @@
+<%= render layout: "settings/layout" do %>
+  <% if !i_manage_payment_and_subscription_info? %>
+    <section class="section is-paddingless">
+      <h1 class="title is-5">Billing overview</h1>
+      <hr />
+
+      <article class="message is-primary">
+        <div class="message-body">
+          <p>Only admins can see or modify billing / subscription information 🙅</p>
+        </div>
+      </article>
+    </section>
+
+  <% else %>
+    <section class="section is-paddingless has-margin-bottom-10">
+      <h1 class="title is-5">Billing overview</h1>
+      <hr />
+
+      <div class="box">
+        <% if current_user.card_last_four.present? %>
+          <article class="media is-marginless is-hidden-touch">
+            <div class="media-left">
+              <span class="icon is-medium has-text-primary">
+                <i class="fa fa-2x fa-<%= Nutmeg::Stripe.font_awesome_icon_for(current_user.card_brand) %>"></i>
+              </span>
+            </div>
+
+            <div class="media-content is-marginless">
+              <%= card_details for: :desktop %>
+            </div>
+          </article>
+
+          <%= card_details for: :touch %>
+
+        <% else %>
+          <nav class="level is-mobile is-marginless">
+            <div class="level-left">
+              <div class="level-item">
+                <div class="content is-marginless">
+                  <p class="is-marginless">None<p>
+                </div>
+              </div>
+            </div>
+
+            <div class="level-right">
+              <%= link_to new_settings_billing_path, class: "level-item" do %>
+                <button class="button is-info is-outlined">
+                  Add credit card
+                </button>
+              <% end %>
+            </div>
+          </nav>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="section is-paddingless has-margin-bottom-10">
+      <h1 class="title is-5">Plan info</h1>
+      <hr />
+
+      <div class="box">
+        <nav class="level is-marginless">
+          <div class="level-left">
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="title is-2">$49<span class="is-size-5">/mo</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="level-item has-text-centered">
+            <div>
+              <p class="heading">Account Status</p>
+              <%= user_status %>
+            </div>
+          </div>
+
+          <div class="level-right">
+            <% if [:trialing?, :active_until_period_end?, :cancelled?, :past_due?].any? { |m| current_user.send(m) } %>
+              <% if current_user.card_last_four? %> <%# if they have a card, we can just post to subsriptions#create %>
+                <div class="level-item">
+                  <%= form_with scope: :subscription, url: settings_subscription_path,
+                                                      method: :post do |f| %>
+                    <%= f.button "Start subscription", class: "button is-success" %>
+                  <% end %>
+                </div>
+
+              <% else %> <%# otherwise, we'll take them to a form where they can give us one %>
+                <%= link_to new_settings_subscription_path, class: "level-item" do %>
+                  <button class="button is-success">
+                    Start subscription
+                  </button>
+                <% end %>
+              <% end %>
+
+            <% else %>
+              <div class="level-item">
+                <%= form_with scope: :subscription, url: settings_subscription_path,
+                                                    method: :delete do |f| %>
+                  <%= f.button "Cancel subscription", class: "button is-danger is-outlined",
+                                                      data: {
+                                                        disable: { class: "is-loading" },
+                                                        confirm: "Are you sure?\n\nYou're of course " \
+                                                                 "free to cancel at anytime, and you can " \
+                                                                 "continue to use Nutmeg until your " \
+                                                                 "current subscription period ends."
+                                                      } %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </nav>
+      </div>
+
+      <div class="content">
+        <p>
+          ☝️ We offer a single plan to keep things simple! You can stop your subscription at any time
+          and always access your account data (you just won't be able to add to it). But we hope you
+          don't!
+        </p>
+
+        <p>If you need to extend your trial, feel free to email us at <%= mail_to "help@nutmeg.com" %></p>
+      </div>
+    </section>
+
+    <section class="section is-paddingless">
+      <h1 class="title is-5">Payment history</h1>
+      <hr />
+
+      <% if current_user.stripe_payments.blank? %>
+        <div class="content">
+          <p>None</p>
+        </div>
+
+      <% else %>
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th class="is-hidden-touch">ID</th>
+              <th>Date</th>
+              <th class="is-hidden-touch">Payment method</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% current_user.stripe_payments.each do |payment| %>
+              <tr>
+                <td class="is-hidden-touch"><%= payment.id %></td>
+                <td><%= payment.created_at.strftime("%Y-%m-%d") %></td>
+                <td class="is-hidden-touch"><%= payment.card %></td>
+                <td><%= number_to_currency(payment.amount / 100) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </section>
+  <% end %>
+<% end %>

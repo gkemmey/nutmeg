@@ -1,0 +1,25 @@
+<% if formats == [:html] %>
+<div id="flash_messages_container" style="position: sticky; top: 10px; z-index: 10;">
+<% end %>
+
+  <% [:info, :success, :warning, :danger, :primary, :notice].tap do |ok_keys| %>
+    <% flash.each do |key, message| %>
+      <% next unless ok_keys.include?(key.to_sym) %>
+
+        <article class="message is-dismissible is-<%= key == :notice ? :danger : key %>"
+                 data-behavior="flash"
+                 data-controller="dismissible">
+
+          <div class="message-body">
+            <p><%= message %></p>
+            <button class="delete" data-action="click->dismissible#dismiss"></button>
+          </div>
+        </article>
+
+        <%= fix_bulmas_default_article_spacing %>
+    <% end %>
+  <% end %>
+
+<% if formats == [:html] %>
+</div>
+<% end %>

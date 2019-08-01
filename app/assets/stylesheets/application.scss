@@ -1,0 +1,44 @@
+@import 'bulma/bulma';
+
+@for $i from 1 through 10 { /* 0.25, 0.5, 0.75, 1.0, 1.25, 1.5 rem */
+  $size: ($i * 0.25) + 0rem;
+
+  @each $m in ('top', 'right', 'bottom', 'left') {
+    .has-margin-#{$m}-#{$i} {
+      margin-#{$m}: $size !important;
+    }
+
+    .has-padding-#{$m}-#{$i} {
+      padding-#{$m}: $size !important;
+    }
+
+    @each $name, $pair in $colors {
+      $color: nth($pair, 1);
+
+      .has-border-#{$m}-#{$i}-#{$name} {
+        border-#{$m}: $size solid $color !important;
+      }
+    }
+  }
+
+  .has-padding-#{$i} {
+    padding: $size !important;
+  }
+}
+
+.card.is-rounded {
+  border-radius: 3px;
+}
+
+.message.is-dismissible {
+  .message-body {
+    display: flex;
+    justify-content: space-between;;
+
+    .delete {
+      flex-grow: 0;
+      flex-shrink: 0;
+      margin-left: 0.75em;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<h2>Heads up!</h2>
+
+<p>
+  Looks like your card on file will expire soon (details below). If you have any questions,
+  just reply to this email.
+</p>
+
+<p>
+  You can update your payment info
+  <%= link_to "here", settings_billing_url(subdomain: @user.subdomain) %>.
+</p>
+
+<h3 style="margin-bottom: 15px;">Card details</h3>
+<p>
+  <b>Last four:</b> <%= @user.card_last_four %>
+  <br />
+  <b>Expiration:</b> <%= @user.card_expires_at.strftime("%m / %y")  %>
+</p>

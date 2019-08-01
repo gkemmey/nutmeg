@@ -1,0 +1,67 @@
+<%= render layout: "settings/layout" do %>
+  <section class="section is-paddingless">
+    <h1 class="title is-5">Payment info</h1>
+    <hr />
+
+    <%= form_with scope: :billing, url: settings_billing_path,
+                                        method: :post,
+                                        local: true, # turn off the ujs stuffs, let stripe handle things
+                                        data: {
+                                          controller: "credit-card-form",
+                                          action: "submit->credit-card-form#handleSubmit"
+                                        } do |f| %>
+      <div class="field">
+        <%= f.label :email, class: "label" %>
+
+        <%= f.wrapper :email, "Email (of whoever manages the credit card)", class: "control" do %>
+          <%= f.email_field :email, placeholder: "card_holder@example.com", class: "input is-medium" %>
+        <% end %>
+
+        <% if (error = flash[:crib_flash_to_show_email_error_through_redirect]).present? %>
+          <p class="help is-danger"><%= error %></p>
+        <% end %>
+      </div>
+
+      <div class="field">
+        <%= label_tag nil, "Card number", for: "card_number", class: "label" %>
+
+        <div class="control">
+          <div class="input is-medium" style="display: block; justify-content: normal;"
+                                       data-target="credit-card-form.number">
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-mobile">
+        <div class="column">
+          <div class="field">
+            <%= label_tag nil, "Expiration", for: "expiration", class: "label" %>
+
+            <div class="control">
+              <div class="input is-medium" style="display: block; justify-content: normal;"
+                                           data-target="credit-card-form.expiry">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <%= label_tag nil, "CVC", for: "cvc", class: "label" %>
+
+            <div class="control">
+              <div class="input is-medium" style="display: block; justify-content: normal;"
+                                           data-target="credit-card-form.cvc">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control is-clearfix">
+        <%= f.button "Save", class: "is-pulled-right is-medium button is-success",
+                             data: { target: "credit-card-form.submit" } %>
+      </div>
+    <% end %>
+  </section>
+<% end %>

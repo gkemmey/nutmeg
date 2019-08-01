@@ -1,0 +1,47 @@
+<nav class="level is-marginless<%= " is-hidden-desktop" if local_assigns[:for] == :touch %>">
+  <div class="level-left">
+    <div class="level-item">
+      <div class="content is-marginless">
+        <p class="is-marginless">
+          This accout is billed to
+          <br />
+          <span class="has-text-weight-semibold">
+            Card ending in <%= current_user.card_last_four %>
+          </span>
+          <br />
+
+          <% if local_assigns[:for] == :touch %>
+            <span class="has-text-weight-semibold" style="word-break: break-word;">
+          <% else %>
+            <span class="has-text-weight-semibold">
+          <% end %>
+            <%= current_user.billing_email %>
+          </span>
+
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="level-right">
+    <%= link_to settings_billing_path, class: "level-item",
+                                       method: :delete,
+                                       data: {
+                                         confirm: "Are you sure?\n\nYou're, of course, free to " \
+                                                  "remove your card to ensure you aren't billed to " \
+                                                  "that card again. However, if you do so without " \
+                                                  "adding another card before you're billed again, " \
+                                                  "your subscription will eventually be cancelled 😬"
+                                       } do %>
+      <button class="button is-danger is-outlined">
+        Remove credit card
+      </button>
+    <% end %>
+
+    <%= link_to new_settings_billing_path, class: "level-item" do %>
+      <button class="button is-info is-outlined">
+        Change credit card
+      </button>
+    <% end %>
+  </div>
+</nav>

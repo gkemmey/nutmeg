@@ -1,0 +1,125 @@
+import { Controller } from "stimulus"
+
+export default class extends Controller {
+  static targets = ['number', 'expiry', 'cvc', 'submit']
+
+  initialize() {
+    this.stripe = Stripe('<%= Stripe.public_key %>');
+
+    this.elements = this.stripe.elements({
+      fonts: [
+        { cssSrc: "https://fonts.googleapis.com/css?family=Fira+Sans" }
+      ]
+    })
+
+    this.styles = {
+      base: {
+        color: '#363636',
+        fontFamily: 'Fira Sans',
+        fontSize: '20px',
+        fontWeight: '400',
+        fontSmoothing: 'antialiased',
+        lineHeight: '30px',
+        '::placeholder': {
+          // bulma sets it like so: rgba($input-color, 0.3)
+          color: 'rgba(54, 54, 54, 0.3)'
+        }
+      },
+      invalid: {
+        // our bulma override for danger
+        color: '#f44336'
+      }
+    }
+  }
+
+  connect() {
+    this.cleanUpErrorsFor("number")
+    this.cleanUpErrorsFor("expiry")
+    this.cleanUpErrorsFor("cvc")
+
+    // we have to save off any one of our stripe connected elements to pass to `Stripe#createToken`
+    // in our submit handler
+    this.tokenizableStripeElement = this.connectToStripe('number')
+    this.connectToStripe('expiry')
+    this.connectToStripe('cvc')
+  }
+
+  cleanUpErrorsFor(target) {
+    let element = this[`${target}Target`]
+    let wrapper = element.parentElement
+
+    for (let old_error of wrapper.querySelectorAll("p.help.is-danger")) {
+      wrapper.removeChild(old_error)
+    }
+  }
+
+  connectToStripe(target) {
+    let type = undefined
+    switch (target) {
+      case "number":
+        type = 'cardNumber'
+        break
+      case "expiry":
+        type = "cardExpiry"
+        break
+      case "cvc":
+        type = "cardCvc"
+        break
+    }
+
+    let element = this.elements.create(type, { style: this.styles })
+
+    element.mount(this[`${target}Target`])
+    element.on('change', this.handleChange(target))
+
+    return element
+  }
+
+  handleChange(target) {
+    return (event) => {
+      this.cleanUpErrorsFor(target)
+
+      let element = this[`${target}Target`]
+      let wrapper = element.parentElement
+
+      if (event.error) {
+        let p = document.createElement("P");
+        p.appendChild(document.createTextNode(event.error.message))
+        p.classList.add("help", "is-danger")
+
+        wrapper.classList.add("is-danger")
+        wrapper.appendChild(p)
+      }
+      else {
+        wrapper.classList.remove("is-danger")
+      }
+    }
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    this.submitTarget.disabled = true
+    this.submitTarget.classList.add("is-loading")
+
+    this.stripe.createToken(this.tokenizableStripeElement).
+      then((result) => {
+        if (result.error) {
+          this.handleChange("number")(result)
+          this.submitTarget.disabled = false
+          this.submitTarget.classList.remove("is-loading")
+        }
+        else {
+          const hiddenInput = document.createElement("input")
+
+          hiddenInput.setAttribute("type", "hidden")
+          hiddenInput.setAttribute("name", "stripeToken")
+          hiddenInput.setAttribute("value", result.token.id)
+
+          this.element.appendChild(hiddenInput)
+          this.element.submit()
+        }
+      })
+  }
+}

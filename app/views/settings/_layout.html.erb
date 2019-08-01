@@ -1,0 +1,54 @@
+<section class="section has-background-wild-sand">
+  <div class="container">
+    <%= render partial: "shared/flash_messages" %>
+
+    <h1 class="title is-4">Settings</h1>
+    <hr />
+
+    <div class="columns is-mobile">
+      <div class="column is-one-third">
+        <%= link_to settings_path do %>
+          <%= content_tag :div, class: classes('card is-rounded is-shadowless',
+                                               has_border_left_1_info: current_page?(settings_path)) do %>
+
+            <div class="card-content has-padding-3 has-margin-bottom-4">
+              <p class="<%= current_page?(settings_path) ? 'has-text-info has-text-weight-semibold' : '' %>">
+                Profile
+              </p>
+            </div>
+
+          <% end %>
+        <% end %>
+
+        <%= link_to settings_billing_path do %>
+          <% [
+               current_page?(new_settings_billing_path),
+               current_page?(settings_billing_path),
+               current_page?(new_settings_subscription_path),
+               current_page?(settings_subscription_path)
+             ].any?.tap do |if_on_target_page| %>
+
+            <%= content_tag :div, class: classes('card is-rounded is-shadowless',
+                                                  has_border_left_1_info: if_on_target_page) do %>
+
+              <div class="card-content has-padding-3"><%# last one ditches the `has-margin-bottom-4` class %>
+                <p class="<%= if_on_target_page ? 'has-text-info has-text-weight-semibold' : '' %>">
+                  Billing
+                </p>
+              </div>
+            <% end %>
+
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="column">
+        <div class="card is-rounded is-shadowless">
+          <div class="card-content has-padding-3">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

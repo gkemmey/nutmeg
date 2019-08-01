@@ -1,0 +1,12 @@
+<h2>Thanks for using Skilltree!</h2>
+
+<p>We've processed your refund (details below). If you have any questions, just reply to this email.</p>
+
+<h3 style="margin-bottom: 15px;">Payment information</h3>
+<p>
+  <b>Date:</b> <%= Time.at(@charge.created).utc.strftime("%Y-%m-%d")  %>
+  <br />
+  <b>Amount:</b> <%= ActionController::Base.helpers.number_to_currency(@charge.amount / 100.0) %>
+  <br />
+  <b>ID:</b> <%= @charge.id %>
+</p>

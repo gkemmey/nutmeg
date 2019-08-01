@@ -1,24 +1,26 @@
-# README
+An example Stripe implementation which I wrote more about here: TODO
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Setup
 
-Things you may want to cover:
+1. `$ bundle exec install`
+2. `gem install mailcatcher`
+3. `$ cp .env.example .env`
+4. Edit that file with your own stripe config and ngrok subdomain
+5. `$ bundle exec rails db:create db:migrate`
+6. `$ ngrok http -subdomain=whatever_you_put_in_env_file 3000`
+7. `$ mailcatcher -f`
+8. `$ bundle exec rails server`
 
-* Ruby version
+### FAQ
 
-* System dependencies
+#### 1. What about more than one Stripe plan?
 
-* Configuration
+You'd have to augment this example. It's only setup to work with having a single plan at the moment, because that's all I needed.
 
-* Database creation
+#### 2. Why dot-env over rails credentials?
 
-* Database initialization
+Idk, I just felt iffy about committing credentials publicly -- even encrypted, test-only ones 🤷‍♂️
 
-* How to run the test suite
+#### 3. Why did you call it nutmeg?
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+This example is pulled from a project I'm working on called [Skilltree](https://www.skilltree.us), so I just picked a random type of tree 🌳
