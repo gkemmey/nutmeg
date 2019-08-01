@@ -11,6 +11,12 @@ An example Stripe implementation which I wrote more about here: TODO
 7. `$ mailcatcher -f`
 8. `$ bundle exec rails server`
 
+### Run the tests
+
+1. `$ bundle exec install`
+2. `$ bundle exec rails db:create db:migrate`
+3. `$ bundle exec rails test ; bundle exec rails test:system`
+
 ### FAQ
 
 #### 1. What about more than one Stripe plan?
@@ -21,6 +27,6 @@ You'd have to augment this example. It's only setup to work with having a single
 
 Idk, I just felt iffy about committing credentials publicly -- even encrypted, test-only ones 🤷‍♂️
 
-#### 3. Why did you call it nutmeg?
+#### 3. Why did you call it Nutmeg?
 
 This example is pulled from a project I'm working on called [Skilltree](https://www.skilltree.us), so I just picked a random type of tree 🌳
