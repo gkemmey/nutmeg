@@ -1,5 +1,7 @@
 An example Stripe implementation which I wrote more about here: TODO
 
+![Nutmeg](./nutmeg.png)
+
 ### Setup
 
 1. `$ bundle exec install`
