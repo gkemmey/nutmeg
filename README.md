@@ -1,4 +1,4 @@
-An example Stripe implementation which I wrote more about here: TODO
+An example Stripe implementation which I wrote more about here: _[Stripe: Beyond the "Getting Started" Docs](http://blog.graykemmey.com/2019/09/02/stripe-beyond-the-getting-started-docs/)_.
 
 ![Nutmeg](./nutmeg.png)
 
